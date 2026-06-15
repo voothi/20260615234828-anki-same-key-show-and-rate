@@ -11,13 +11,14 @@ def register_reviewer_shortcuts(state: str, shortcuts: list):
     # Only register shortcuts when reviewing cards
     if state == "review":
         config = get_config()
-        hotkeys = config.get("hotkeys", ["1", "2", "3", "4"])
+        hotkeys = config.get("hotkeys", ["1", "2", "3", "4", "h"])
         
         ease_map = {
             "1": 1,
             "2": 2,
             "3": 3,
-            "4": 4
+            "4": 4,
+            "h": 1
         }
         
         def create_callback(ease):
