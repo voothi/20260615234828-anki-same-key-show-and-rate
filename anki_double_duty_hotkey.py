@@ -11,17 +11,20 @@ def register_reviewer_shortcuts(state: str, shortcuts: list):
     # Only register shortcuts when reviewing cards
     if state == "review":
         config = get_config()
-        hotkeys = config.get("hotkeys", ["1", "2", "3", "4", "h"])
+        hotkey_mappings = config.get("hotkeys", {
+            "1": "1",
+            "2": "2",
+            "3": "3",
+            "4": "4",
+            "h": "h"
+        })
         
-        ease_map = {
-            "1": 1,
-            "2": 2,
-            "3": 3,
-            "4": 4,
-            "h": 1
-        }
-        
-        def create_callback(ease):
+        # Extract the original handlers for the target keys before we modify shortcuts
+        original_handlers = {}
+        for key, handler in shortcuts:
+            original_handlers[key] = handler
+
+        def create_callback(trigger, target):
             def callback():
                 # If looking at the front side of a card (Question)
                 if mw.reviewer.state == "question":
@@ -31,22 +34,23 @@ def register_reviewer_shortcuts(state: str, shortcuts: list):
                         mw.reviewer.showAnswer()
                 # If looking at the back side of a card (Answer)
                 elif mw.reviewer.state == "answer":
-                    if hasattr(mw.reviewer, "_answerCard"):
-                        mw.reviewer._answerCard(ease)
-                    elif hasattr(mw.reviewer, "answerCard"):
-                        mw.reviewer.answerCard(ease)
+                    # Run target key's original handler if it exists
+                    if target in original_handlers:
+                        original_handlers[target]()
+                    # Fallback: if target is a digit, map directly to corresponding ease rating
+                    elif target.isdigit():
+                        ease = int(target)
+                        if hasattr(mw.reviewer, "_answerCard"):
+                            mw.reviewer._answerCard(ease)
+                        elif hasattr(mw.reviewer, "answerCard"):
+                            mw.reviewer.answerCard(ease)
             return callback
 
-        for hotkey in hotkeys:
-            # Remove any existing binding for the configured hotkey to avoid conflicts
-            shortcuts[:] = [(k, h) for (k, h) in shortcuts if k != hotkey]
+        for trigger, target in hotkey_mappings.items():
+            # Remove any existing binding for the configured trigger key to avoid conflicts
+            shortcuts[:] = [(k, h) for (k, h) in shortcuts if k != trigger]
             
-            # Determine target ease rating
-            ease = ease_map.get(hotkey, 1)
-            if hotkey.isdigit():
-                ease = int(hotkey)
-                
             # Append our custom double-duty handler
-            shortcuts.append((hotkey, create_callback(ease)))
+            shortcuts.append((trigger, create_callback(trigger, target)))
 
 gui_hooks.state_shortcuts_will_change.append(register_reviewer_shortcuts)
