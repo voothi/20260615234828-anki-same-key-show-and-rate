@@ -10,6 +10,8 @@ def get_config():
 def register_reviewer_shortcuts(state: str, shortcuts: list):
     # Only register shortcuts when reviewing cards
     if state == "review":
+        if not getattr(mw, "reviewer", None):
+            return
         config = get_config()
         hotkey_mappings = config.get("hotkeys", {
             "1": "1",
@@ -26,6 +28,8 @@ def register_reviewer_shortcuts(state: str, shortcuts: list):
 
         def create_callback(trigger, target):
             def callback():
+                if not getattr(mw, "reviewer", None):
+                    return
                 # If looking at the front side of a card (Question)
                 if mw.reviewer.state == "question":
                     if hasattr(mw.reviewer, "_showAnswer"):
