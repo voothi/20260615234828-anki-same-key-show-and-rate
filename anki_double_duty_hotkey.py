@@ -11,30 +11,41 @@ def register_reviewer_shortcuts(state: str, shortcuts: list):
     # Only register shortcuts when reviewing cards
     if state == "review":
         config = get_config()
-        hotkey = config.get("hotkey", "1")
-        ease_level = config.get("ease_level", 1)
+        hotkeys = config.get("hotkeys", ["1", "2", "3", "4"])
         
-        # Remove any existing binding for the configured hotkey to avoid conflicts
-        for i, (key, handler) in enumerate(shortcuts):
-            if key == hotkey:
-                shortcuts.pop(i)
-                break
+        ease_map = {
+            "1": 1,
+            "2": 2,
+            "3": 3,
+            "4": 4
+        }
+        
+        def create_callback(ease):
+            def callback():
+                # If looking at the front side of a card (Question)
+                if mw.reviewer.state == "question":
+                    if hasattr(mw.reviewer, "_showAnswer"):
+                        mw.reviewer._showAnswer()
+                    elif hasattr(mw.reviewer, "showAnswer"):
+                        mw.reviewer.showAnswer()
+                # If looking at the back side of a card (Answer)
+                elif mw.reviewer.state == "answer":
+                    if hasattr(mw.reviewer, "_answerCard"):
+                        mw.reviewer._answerCard(ease)
+                    elif hasattr(mw.reviewer, "answerCard"):
+                        mw.reviewer.answerCard(ease)
+            return callback
+
+        for hotkey in hotkeys:
+            # Remove any existing binding for the configured hotkey to avoid conflicts
+            shortcuts[:] = [(k, h) for (k, h) in shortcuts if k != hotkey]
+            
+            # Determine target ease rating
+            ease = ease_map.get(hotkey, 1)
+            if hotkey.isdigit():
+                ease = int(hotkey)
                 
-        def on_hotkey_pressed():
-            # If looking at the front side of a card (Question)
-            if mw.reviewer.state == "question":
-                if hasattr(mw.reviewer, "_showAnswer"):
-                    mw.reviewer._showAnswer()
-                elif hasattr(mw.reviewer, "showAnswer"):
-                    mw.reviewer.showAnswer()
-            # If looking at the back side of a card (Answer)
-            elif mw.reviewer.state == "answer":
-                if hasattr(mw.reviewer, "_answerCard"):
-                    mw.reviewer._answerCard(ease_level)
-                elif hasattr(mw.reviewer, "answerCard"):
-                    mw.reviewer.answerCard(ease_level)
-                    
-        # Append our custom double-duty handler
-        shortcuts.append((hotkey, on_hotkey_pressed))
+            # Append our custom double-duty handler
+            shortcuts.append((hotkey, create_callback(ease)))
 
 gui_hooks.state_shortcuts_will_change.append(register_reviewer_shortcuts)

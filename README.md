@@ -1,8 +1,12 @@
 # Anki Double-Duty Hotkey
 
-An Anki Desktop add-on that enables a single keyboard shortcut (default `1`) to perform double-duty operations during review:
-1. **On the Front (Question) side of a card:** Pressing the shortcut reveals the answer (equivalent to pressing Space or Enter).
-2. **On the Back (Answer) side of a card:** Pressing the shortcut rates the card as **Again** (ease rating `1`, equivalent to Anki's default `1` key behavior).
+An Anki Desktop add-on that enables keyboard shortcuts (default `1`, `2`, `3`, `4`) to perform double-duty operations during review:
+1. **On the Front (Question) side of a card:** Pressing any of the configured shortcuts reveals the answer (equivalent to pressing Space or Enter).
+2. **On the Back (Answer) side of a card:** Pressing a shortcut key maps to its corresponding ease rating:
+   - `1`: Again
+   - `2`: Hard
+   - `3`: Good
+   - `4`: Easy
 
 This solves keyboard-routing limitations by hooking directly into the Qt/C++ shortcut registry system rather than injecting listeners inside the card's template HTML/JavaScript contexts.
 
@@ -19,19 +23,18 @@ This solves keyboard-routing limitations by hooking directly into the Qt/C++ sho
 
 ## Configuration
 
-You can customize the key shortcut and the response rating ease level via Anki's Add-on config manager (**Tools > Add-ons > Double-Duty Hotkey 1 > Config**).
+You can customize the list of active double-duty keys via Anki's Add-on config manager (**Tools > Add-ons > Double-Duty Hotkey 1 > Config**).
 
 Default configuration:
 ```json
 {
-    "hotkey": "1",
-    "ease_level": 1
+    "hotkeys": [
+        "1",
+        "2",
+        "3",
+        "4"
+    ]
 }
 ```
 
-- `hotkey`: The keyboard key to use (e.g. `"1"`, `"Space"`, etc.).
-- `ease_level`: The card rating to apply on the back side:
-  - `1`: Again
-  - `2`: Hard
-  - `3`: Good
-  - `4`: Easy
+Digits in the configuration list automatically map to their respective numerical ease levels. Non-digit keys default to ease level `1` (Again).
