@@ -102,6 +102,16 @@ def create_addon_package(output_dir: str = None):
 
             if not issues_found:
                 print("✅ Verification passed: Sensitive paths excluded.")
+                
+                # Generate SHA256 sidecar checksum
+                import hashlib
+                checksum_path = output_path.with_name(f"{output_path.name}.sha256")
+                digest = hashlib.sha256()
+                with open(output_path, "rb") as f:
+                    for chunk in iter(lambda: f.read(1024 * 1024), b""):
+                        digest.update(chunk)
+                checksum_path.write_text(f"{digest.hexdigest()} *{output_path.name}\n", encoding="utf-8")
+                print(f"✅ Sidecar checksum created: {checksum_path.name}")
             else:
                 print("⚠️  Verification failed! Check the output.")
 
