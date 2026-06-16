@@ -14,14 +14,14 @@ sys.modules['aqt'].mw = mock_mw
 sys.modules['aqt.gui_hooks'] = mock_gui_hooks
 
 # Now import the module
-import anki_same_key_show_and_rate
+from src import main
 
 def test_get_config():
     # Setup
     mock_mw.addonManager.getConfig.return_value = {"hotkeys": {"1": "1"}}
     
     # Run
-    config = anki_same_key_show_and_rate.get_config()
+    config = main.get_config()
     
     # Assert
     assert config == {"hotkeys": {"1": "1"}}
@@ -47,7 +47,7 @@ def test_register_reviewer_shortcuts_question_state():
     ]
     
     # Run shortcut registration
-    anki_same_key_show_and_rate.register_reviewer_shortcuts("review", shortcuts)
+    main.register_reviewer_shortcuts("review", shortcuts)
     
     # Verify shortcuts list is modified
     assert len(shortcuts) == 3
@@ -86,7 +86,7 @@ def test_register_reviewer_shortcuts_answer_state():
     ]
     
     # Run shortcut registration
-    anki_same_key_show_and_rate.register_reviewer_shortcuts("review", shortcuts)
+    main.register_reviewer_shortcuts("review", shortcuts)
     
     # Test Answer State Behavior for '1'
     mock_mw.reviewer.state = "answer"
@@ -107,7 +107,7 @@ def test_register_reviewer_shortcuts_fallback():
     mock_mw.reviewer = MagicMock()
     
     shortcuts = []
-    anki_same_key_show_and_rate.register_reviewer_shortcuts("review", shortcuts)
+    main.register_reviewer_shortcuts("review", shortcuts)
     
     mock_mw.reviewer.state = "answer"
     mock_mw.reviewer._answerCard = MagicMock()
@@ -124,7 +124,7 @@ def test_register_reviewer_shortcuts_guard_when_no_reviewer():
     shortcuts = [("1", MagicMock())]
     
     # Run shortcut registration
-    anki_same_key_show_and_rate.register_reviewer_shortcuts("review", shortcuts)
+    main.register_reviewer_shortcuts("review", shortcuts)
     
     # List should remain unmodified because the guard triggers
     assert len(shortcuts) == 1

@@ -1,4 +1,4 @@
 try:
-    from . import anki_same_key_show_and_rate
+    from .src import main
 except ImportError:
-    import anki_same_key_show_and_rate
+    from src import main
