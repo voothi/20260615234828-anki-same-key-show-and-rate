@@ -50,13 +50,24 @@ This project is organized following modular Python development best practices fo
 20260615234828-anki-same-key-show-and-rate/
 ├── .gitattributes
 ├── .gitignore
+├── LICENSE                                # Project license
 ├── README.md                              # Documentation
+├── release-notes.md                       # Version release notes
 ├── pytest.ini                             # Pytest configuration
 ├── manifest.json                          # Anki addon manifest (required at root)
 ├── config.json                            # Addon configuration defaults (required at root)
 ├── config.json.template                   # Addon configuration template (required at root)
 ├── meta.json                              # Local addon state metadata (required at root)
 ├── __init__.py                            # Entry point, imports src.main
+├── scripts/                               # Developer build and deployment tools
+│   ├── make_release.py                    # Release compilation entry point
+│   ├── make_deploy.py                     # Local addon deployment utility
+│   └── packaging/                         # Subdirectory containing internal build pipelines
+│       ├── packaging.ini                  # Release configurations and exclusions
+│       ├── release_pipeline.py            # Orchestrator
+│       ├── create_addon_zip.py            # Zips addon and writes checksums
+│       ├── setup_local_vendor.py          # Prepares local wheels
+│       └── build_all_vendors.py           # Prepares platform wheels
 ├── src/                                   # All codebase logic
 │   ├── __init__.py                        # Package initialization (empty file)
 │   └── main.py                            # Core same-key show/rate hook logic
