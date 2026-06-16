@@ -84,6 +84,14 @@ Default configuration:
 
 The keys of the `hotkeys` object are the triggers on the keyboard. The values represent the target shortcut/action key to run on the back side of the card (e.g., `"h"` maps to `"h"`'s default back action, while `"1"` maps to `"1"`'s default back action).
 
+### Why Key-Value Mappings instead of a Simple List?
+
+If the configuration used a simple list of keys (e.g., `["1", "2", "3", "4", "h"]`), it would assume that the key pressed on the front must trigger itself on the back. While this works for standard keys, it breaks down for more advanced layouts:
+
+1. **Custom Key Routing:** If a user reviews using a custom layout (e.g., mapping `h` to Again, `j` to Good, and `e` to Easy in Anki's settings), they can configure `{"h": "1", "j": "3", "e": "4"}`. Tap `h` to flip the card, and tap it again to route directly to rating `1` (Again).
+2. **Decoupling Triggers from Actions:** A dictionary decoupling allows any physical key on the keyboard to map to any logical rating or handler on the back side of the card, regardless of whether that key natively performs a rating in Anki.
+3. **Robust Fallbacks:** If a target key does not have an original handler registered, the mapping tells the add-on which ease rating to fallback to (e.g., routing `h` to rate `1`).
+
 [Return to Top](#table-of-contents)
 
 ## Testing
