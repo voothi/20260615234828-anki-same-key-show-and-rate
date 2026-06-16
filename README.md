@@ -8,6 +8,7 @@ An Anki Desktop add-on that enables keyboard shortcuts (default `1`, `2`, `3`, `
 ## Table of Contents
 
 - [Features](#features)
+- [How It Works](#how-it-works)
 - [Project Structure](#project-structure)
 - [Compatibility](#compatibility)
 - [Installation](#installation)
@@ -22,6 +23,22 @@ An Anki Desktop add-on that enables keyboard shortcuts (default `1`, `2`, `3`, `
 *   **Spacebar-Free Reviewing**: Pressing any configured answer shortcut when a card's question (Front) is active will instantly show the answer.
 *   **Same-Key Rating**: Pressing the shortcut key again when the card's answer (Back) is active will rate the card using that key's assigned rating/action.
 *   **Custom Shortcuts Compatibility**: Works with default numeric keys (`1` to `4`) as well as custom keybindings (like Vim mappings or other layouts).
+
+[Return to Top](#table-of-contents)
+
+## How It Works
+
+The add-on automates the review loop using the following state transitions:
+
+1. **Card Question (Front Side / Unrevealed):**
+   * When a new card is presented, Anki is in the `"question"` state.
+   * Pressing any of your configured trigger keys (e.g., `3` or `j`) intercepts the keypress and triggers the **Show Answer** (flip) action (`showAnswer()`), revealing the back side of the card.
+2. **Card Answer (Back Side / Revealed):**
+   * Once the answer is shown, Anki enters the `"answer"` state.
+   * Pressing the same key (e.g., `3` or `j`) routes to the mapped target action:
+     * If the target has an existing shortcut registered in Anki, it triggers that shortcut's action (e.g., running the custom handler for rating 3/Good).
+     * If there is no handler, it falls back to directly answering/rating the card (`answerCard(ease)`) using the configured rating index.
+   * Rating the card automatically loads the next card's question, restarting the loop at Step 1.
 
 [Return to Top](#table-of-contents)
 
