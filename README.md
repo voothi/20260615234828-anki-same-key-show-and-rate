@@ -2,6 +2,7 @@
 
 [![Version](https://img.shields.io/badge/version-v1.0.0-blue)](https://github.com/voothi/20260615234828-anki-same-key-show-and-rate/releases) 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
+[![AnkiWeb](https://img.shields.io/badge/AnkiWeb-290816457-blue)](https://ankiweb.net/shared/info/290816457)
 
 An Anki Desktop add-on that enables keyboard shortcuts (default `1`, `2`, `3`, `4`, `h`) to perform same-key show and rate operations during review, eliminating the need to hit the spacebar on every card.
 
