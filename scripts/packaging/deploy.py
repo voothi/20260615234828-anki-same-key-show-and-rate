@@ -145,7 +145,7 @@ def main():
     target = args.target
     if not target:
         target = get_default_anki_addons_path(addon_name)
-    target = target.resolve()
+    target = target.absolute()
     
     mode = args.mode
     if not mode:
