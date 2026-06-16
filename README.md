@@ -1,6 +1,6 @@
-# Anki Double-Duty Hotkey
+# Anki Same-Key Show and Rate
 
-An Anki Desktop add-on that enables keyboard shortcuts (default `1`, `2`, `3`, `4`, `h`) to perform double-duty operations during review:
+An Anki Desktop add-on that enables keyboard shortcuts (default `1`, `2`, `3`, `4`, `h`) to perform same-key show and rate operations during review:
 1. **On the Front (Question) side of a card:** Pressing any of the configured shortcuts reveals the answer (equivalent to pressing Space or Enter).
 2. **On the Back (Answer) side of a card:** Pressing a shortcut key maps to its corresponding target shortcut handler (or ease level):
    - `1` maps to `"1"` (Again)
@@ -19,12 +19,12 @@ This solves keyboard-routing limitations by hooking directly into the Qt/C++ sho
 
 ## Installation
 
-1. Copy this directory into your local Anki add-ons folder (typically `AppData\Roaming\Anki2\addons21\20260615234828-anki-double-duty-hotkey`).
+1. Copy this directory into your local Anki add-ons folder (typically `AppData\Roaming\Anki2\addons21\20260615234828-anki-same-key-show-and-rate`).
 2. Restart Anki.
 
 ## Configuration
 
-You can customize the list of active double-duty keys and what they route to via Anki's Add-on config manager (**Tools > Add-ons > Double-Duty Hotkey 1 > Config**).
+You can customize the list of active double-duty keys and what they route to via Anki's Add-on config manager (**Tools > Add-ons > Same-Key Show and Rate > Config**).
 
 Default configuration:
 ```json

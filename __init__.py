@@ -1,4 +1,4 @@
 try:
-    from . import anki_double_duty_hotkey
+    from . import anki_same_key_show_and_rate
 except ImportError:
-    import anki_double_duty_hotkey
+    import anki_same_key_show_and_rate

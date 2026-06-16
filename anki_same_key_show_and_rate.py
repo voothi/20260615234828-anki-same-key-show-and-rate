@@ -54,7 +54,7 @@ def register_reviewer_shortcuts(state: str, shortcuts: list):
             # Remove any existing binding for the configured trigger key to avoid conflicts
             shortcuts[:] = [(k, h) for (k, h) in shortcuts if k != trigger]
             
-            # Append our custom double-duty handler
+            # Append our custom same-key show/rate handler
             shortcuts.append((trigger, create_callback(trigger, target)))
 
 gui_hooks.state_shortcuts_will_change.append(register_reviewer_shortcuts)
