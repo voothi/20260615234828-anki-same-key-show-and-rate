@@ -24,4 +24,5 @@
     *   Includes a platform-independent release pipeline script (`make_release.py` and `release_pipeline.py`) that executes verification tests and packages production files into clean, timestamped `.ankiaddon` files, strictly filtering out sensitive and developmental directories.
 *   **🛡️ Release Verification**
     *   [Virus scan results and check amount for verification with the archive](https://www.virustotal.com/gui/file/a87e850c2e9e7084c550bcf80cc40f748e6b9275f359c63765076a5bc87fca32)
+
 [Return to Top](#same-key-show-and-rate-release-notes)
