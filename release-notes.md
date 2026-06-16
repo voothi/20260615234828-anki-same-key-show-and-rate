@@ -22,5 +22,6 @@
     *   Includes a `pytest` test suite to offline-verify shortcut registration, hook behaviors, state transitions, and configuration loading.
 *   **📦 Developer Build Infrastructure**
     *   Includes a platform-independent release pipeline script (`make_release.py` and `release_pipeline.py`) that executes verification tests and packages production files into clean, timestamped `.ankiaddon` files, strictly filtering out sensitive and developmental directories.
-
+*   **🛡️ Release Verification**
+    *   [Virus scan results and check amount for verification with the archive](https://www.virustotal.com/gui/file/206a2b34ce85691ecda895b198d8970d0f273d42f3c0f0c72fdfb078a04d939b)
 [Return to Top](#same-key-show-and-rate-release-notes)
