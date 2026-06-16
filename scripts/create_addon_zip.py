@@ -14,7 +14,7 @@ def load_config():
     return config
 
 
-def create_addon_package(output_dir: str = None):
+def create_addon_package(output_dir: str = None) -> Path:
     config = load_config()
     
     addon_name = config.get("release", "addon_name", fallback="anki-same-key-show-and-rate").strip()
@@ -27,7 +27,7 @@ def create_addon_package(output_dir: str = None):
 
     # Determine paths
     script_dir = Path(__file__).resolve().parent
-    project_root = script_dir.parent.parent
+    project_root = script_dir.parent
     addon_source_dir = project_root
     
     if not addon_source_dir.exists():
@@ -52,7 +52,6 @@ def create_addon_package(output_dir: str = None):
         with zipfile.ZipFile(output_path, 'w', zipfile.ZIP_DEFLATED) as zf:
             for root, dirs, files in os.walk(addon_source_dir):
                 # 1. Directory Exclusion (In-place modification)
-                # This prevents descending into user_files, __pycache__, tests, scripts, etc.
                 dirs[:] = [d for d in dirs if d not in excluded_dir_names]
                 
                 for file in files:
@@ -61,7 +60,6 @@ def create_addon_package(output_dir: str = None):
                     rel_path_str = relative_path.as_posix()
                     
                     # 2. Specific Root File Exclusions
-                    # e.g. meta.json, pytest.ini, README.md, etc.
                     if rel_path_str in excluded_root_files:
                         print(f"   Skipping root file: {rel_path_str}")
                         continue
@@ -114,6 +112,8 @@ def create_addon_package(output_dir: str = None):
                 print(f"✅ Sidecar checksum created: {checksum_path.name}")
             else:
                 print("⚠️  Verification failed! Check the output.")
+                
+        return output_path
 
     except Exception as e:
         print(f"❌ Error creating package: {e}")

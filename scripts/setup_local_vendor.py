@@ -30,7 +30,7 @@ def setup_vendor(python_version=None):
 
     # Create/clean vendor directory
     script_dir = Path(__file__).resolve().parent
-    project_root = script_dir.parent.parent
+    project_root = script_dir.parent
     vendor_dir_name = config.get("release", "vendor_dir", fallback="vendor").strip()
     vendor_dir = os.path.join(project_root, vendor_dir_name)
     if os.path.exists(vendor_dir):
