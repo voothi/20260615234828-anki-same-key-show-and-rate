@@ -35,7 +35,17 @@ def ensure_absent(path: Path, force: bool) -> None:
     if not path.exists() and not path.is_symlink():
         return
     if not force:
-        raise FileExistsError(f"Target path already exists at '{path}'. Re-run with --force to replace/overwrite it.")
+        if sys.stdin.isatty():
+            try:
+                confirm = input(f"⚠️  Target already exists at '{path}'. Overwrite? [y/N]: ").strip().lower()
+                if confirm != 'y':
+                    print("Aborted.")
+                    sys.exit(0)
+            except KeyboardInterrupt:
+                print("\nOperation cancelled.")
+                sys.exit(1)
+        else:
+            raise FileExistsError(f"Target path already exists at '{path}'. Re-run with --force to replace/overwrite it.")
 
     print(f"🗑️  Removing existing target at: {path}")
     try:
@@ -107,19 +117,22 @@ def copy_addon_files(source_dir: Path, target_dir: Path, excluded_dirs: set, exc
 
 def main():
     config = load_config()
-    addon_name = config.get("release", "addon_name", fallback="anki-same-key-show-and-rate").strip()
+    
+    script_dir = Path(__file__).resolve().parent
+    project_root = script_dir.parent.parent
+    addon_name = project_root.name
     
     parser = argparse.ArgumentParser(description="Deploy Same-Key Show and Rate addon locally for development.")
     parser.add_argument(
         "--target",
         type=Path,
-        default=get_default_anki_addons_path(addon_name),
+        default=None,
         help="Target addon directory path.",
     )
     parser.add_argument(
         "--mode",
         choices=("copy", "junction"),
-        default="copy",
+        default=None,
         help="Deploy mode: 'copy' files or 'junction' directory link (Windows only).",
     )
     parser.add_argument(
@@ -129,12 +142,30 @@ def main():
     )
     args = parser.parse_args()
     
-    script_dir = Path(__file__).resolve().parent
-    project_root = script_dir.parent.parent
+    target = args.target
+    if not target:
+        target = get_default_anki_addons_path(addon_name)
+    target = target.resolve()
     
-    target = args.target.resolve()
+    mode = args.mode
+    if not mode:
+        if sys.stdin.isatty():
+            try:
+                print("Select deployment mode:")
+                print(" [1] Copy files (standard copy)")
+                print(" [2] Directory Junction (Windows link - recommended for development)")
+                choice = input("Enter choice [1 or 2, default: 1]: ").strip()
+                if choice == "2":
+                    mode = "junction"
+                else:
+                    mode = "copy"
+            except KeyboardInterrupt:
+                print("\nOperation cancelled.")
+                sys.exit(1)
+        else:
+            mode = "copy"
     
-    if args.mode == "junction":
+    if mode == "junction":
         if platform.system().lower() != "windows":
             print("❌ Error: Junction mode is Windows-only. Please use 'copy' mode on macOS/Linux.")
             sys.exit(1)
